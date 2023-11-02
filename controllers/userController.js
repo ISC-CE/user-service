@@ -1,94 +1,101 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models/User.model');
 
-exports.createUser = async (req, res) => {
-  try {
-    const { username, password, email, firstName, lastName } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const user = await User.create({
-      username,
-      password: hashedPassword,
-      email,
-      firstName,
-      lastName,
-      createdDate: new Date(),
-      isActive: true
-    });
-    res.status(201).send(user);
-  } catch (error) {
-    res.status(500).send(error.message);
+const userController = {
+  // POST /users
+  createUser: async (req, res) => {
+    try {
+      const { username, password, email, firstName, lastName } = req.body;
+      const hashedPassword = await bcrypt.hash(password, 12);
+      const user = await User.create({
+        username,
+        password: hashedPassword,
+        email,
+        firstName,
+        lastName,
+        createdDate: new Date(),
+        isActive: true
+      });
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  // GET /users/:userId
+  getUser: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  // PUT /users/:userId
+  updateUser: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { username, email, firstName, lastName, isActive } = req.body;
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      user.username = username || user.username;
+      user.email = email || user.email;
+      user.firstName = firstName || user.firstName;
+      user.lastName = lastName || user.lastName;
+      user.isActive = (isActive !== undefined) ? isActive : user.isActive;
+      await user.save();
+      res.json({ message: 'User updated successfully' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  // DELETE /users/:userId
+  deleteUser: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      await user.destroy();
+      res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  // POST /users/login
+  login: async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const user = await User.findOne({ where: { username } });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+      if (!isPasswordMatch) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+      const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.json({ token });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  // POST /users/logout
+  logout: (req, res) => {
+    res.json({ message: 'Logout successful' });
   }
 };
 
-exports.getUser = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-    res.send(user);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-exports.updateUser = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const { username, email, firstName, lastName, isActive } = req.body;
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-    user.username = username;
-    user.email = email;
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.isActive = isActive;
-    await user.save();
-    res.send('User updated successfully');
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-exports.deleteUser = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-    await user.destroy();
-    res.send('User deleted successfully');
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-exports.login = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ where: { username } });
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) {
-      return res.status(401).send('Invalid credentials');
-    }
-    const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.send({ token });
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-exports.logout = (req, res) => {
-  // Note: Implementing logout functionality usually requires storing tokens in a database or cache
-  // and marking them as invalid once a user logs out. Since this example doesn't implement token storage,
-  // the logout endpoint is a placeholder to show where such functionality would go.
-  res.send('Logout successful');
-};
+module.exports = userController;

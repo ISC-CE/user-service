@@ -1,6 +1,13 @@
 const express = require('express');
-const userController = require('../controllers/userController');
 const router = express.Router();
+
+const userController = require('../controllers/userController');
+
+const userRoleRoutes = require('./userRoleRoutes');
+const userPurchaseHistoryRoutes = require('./userPurchaseHistoryRoutes');
+const userPaymentInformationRoutes = require('./userPaymentInformationRoutes');
+const userAddressRoutes = require('./userAddressRoutes');
+const userWishListRoutes = require('./userWishListRoutes');
 
 // User Management Routes
 // These routes handle various user-related operations as described below
@@ -29,5 +36,11 @@ router.post('/login', userController.login);
 // POST /users/logout - Logs out the currently logged-in user
 // Since this is a stateless API, the client should handle the removal of the authentication token
 router.post('/logout', userController.logout);
+
+router.use('/:userId/roles', userRoleRoutes);
+router.use('/:userId/purchases', userPurchaseHistoryRoutes);
+router.use('/:userId/payment', userPaymentInformationRoutes);
+router.use('/:userId/addresses', userAddressRoutes);
+router.use('/:userId/wishlist', userWishListRoutes);
 
 module.exports = router;
