@@ -49,11 +49,12 @@ User Service is a microservice that is part of an e-commerce project created dur
    DB_NAME=your_database_name
    JWT_SECRET=your_jwt_secret
    ```
-4. Run the application in development mode:
+4. Run the sql file from the sql folder to create a base database.
+5. Run the application in development mode:
    ```bash
    npm run dev
    ```
-5. Run the application in production mode:
+6. Run the application in production mode:
    ```bash
    npm start
    ```
