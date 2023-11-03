@@ -2,6 +2,7 @@
 require('dotenv').config();               // dotenv is a package for loading environment variables from a .env file
 const express = require('express');       // Express is a web application framework for Node.js
 const cors = require('cors');             // CORS is a package for enabling CORS (Cross-Origin Resource Sharing)
+const authenticateToken = require('./middleware/authenticateToken');
 
 const userRoutes = require('./routes/userRoutes');             // Importing userRoutes for handling user-related routes
 const userPurchaseHistoryRoutes = require('./routes/userPurchaseHistoryRoutes'); // Importing userPurchesHistoryRoutes for handling purchase history-related routes
@@ -17,10 +18,10 @@ app.use(cors());         // Enabling CORS for all routes. In production, you mig
 
 // User Management Routes
 app.use('/users', userRoutes); // Mounting the userRoutes to the /users route
-app.use('/purchases', userPurchaseHistoryRoutes)
-app.use('/payment', userPaymentInformationRoutes)
-app.use('/addresses', userAddressRoutes)
-app.use('/wishlist', userWishListRoutes)
+app.use('/purchases', authenticateToken, userPurchaseHistoryRoutes)
+app.use('/payment', authenticateToken, userPaymentInformationRoutes)
+app.use('/addresses', authenticateToken, userAddressRoutes)
+app.use('/wishlist', authenticateToken, userWishListRoutes)
 
 // Starting the server
 // The Server is set to listen on port 3000, and it logs a message to the console once it's running

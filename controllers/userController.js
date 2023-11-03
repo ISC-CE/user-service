@@ -92,10 +92,6 @@ const userController = {
     }
   },
 
-  // POST /users/logout
-  logout: (req, res) => {
-    res.json({ message: 'Logout successful' });
-  }
 };
 
 module.exports = userController;
