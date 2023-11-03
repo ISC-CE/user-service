@@ -27,6 +27,12 @@ const userController = {
   getUser: async (req, res) => {
     try {
       const userId = req.params.userId;
+      const authTokenUserId = req.user.userId;
+
+      if (userId !== authTokenUserId.toString()) {
+        return res.status(403).json({ message: 'Access forbidden. User IDs do not match.' });
+      }
+
       const user = await User.findByPk(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -42,6 +48,12 @@ const userController = {
     try {
       const userId = req.params.userId;
       const { username, email, firstName, lastName, isActive } = req.body;
+      const authTokenUserId = req.user.userId;
+
+      if (userId !== authTokenUserId.toString()) {
+        return res.status(403).json({ message: 'Access forbidden. User IDs do not match.' });
+      }
+
       const user = await User.findByPk(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -62,6 +74,12 @@ const userController = {
   deleteUser: async (req, res) => {
     try {
       const userId = req.params.userId;
+      const authTokenUserId = req.user.userId;
+
+      if (userId !== authTokenUserId.toString()) {
+        return res.status(403).json({ message: 'Access forbidden. User IDs do not match.' });
+      }
+
       const user = await User.findByPk(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
