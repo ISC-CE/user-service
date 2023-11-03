@@ -4,7 +4,6 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 const userRoleRoutes = require('./userRoleRoutes');
-const userPurchaseHistoryRoutes = require('./userPurchaseHistoryRoutes');
 const userPaymentInformationRoutes = require('./userPaymentInformationRoutes');
 const userAddressRoutes = require('./userAddressRoutes');
 const userWishListRoutes = require('./userWishListRoutes');
@@ -36,7 +35,6 @@ router.delete('/:userId', authenticateToken, userController.deleteUser);
 router.post('/login', userController.login);
 
 router.use('/:userId/roles', authenticateToken, userRoleRoutes);
-router.use('/:userId/purchases', authenticateToken, userPurchaseHistoryRoutes);
 router.use('/:userId/payment', authenticateToken, userPaymentInformationRoutes);
 router.use('/:userId/addresses', authenticateToken,userAddressRoutes);
 router.use('/:userId/wishlist', authenticateToken, userWishListRoutes);
