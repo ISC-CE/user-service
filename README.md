@@ -42,6 +42,7 @@ User Service is a microservice that is part of an e-commerce project created dur
    npm install
    ```
 3. Create a .env file in the project root and add the required environment variables:
+   * when you face error with localhost you can try using 127.0.0.1 instead.
    ```bash
    DB_HOST=your_database_host
    DB_USER=your_database_user
@@ -49,12 +50,12 @@ User Service is a microservice that is part of an e-commerce project created dur
    DB_NAME=your_database_name
    JWT_SECRET=your_jwt_secret
    ```
-4. Run the sql file from the sql folder to create a base database.
-5. Run the application in development mode:
+5. Run the sql file from the sql folder to create a base database.
+6. Run the application in development mode:
    ```bash
    npm run dev
    ```
-6. Run the application in production mode:
+7. Run the application in production mode:
    ```bash
    npm start
    ```
