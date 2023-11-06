@@ -9,6 +9,7 @@ const userAddressRoutes = require('./userAddressRoutes');
 const userWishListRoutes = require('./userWishListRoutes');
 
 const authenticateToken = require('../middleware/authenticateToken');
+const authenticateUserId = require('../middleware/authenticateUserId');
 
 // User Management Routes
 // These routes handle various user-related operations as described below
@@ -19,24 +20,24 @@ router.post('/', userController.createUser);
 
 // GET /users/:userId - Retrieves information about a specific user based on their ID
 // The user's ID is passed as a parameter in the URL
-router.get('/:userId',authenticateToken, userController.getUser);
+router.get('/:userId',authenticateToken,authenticateUserId, userController.getUser);
 
 // PUT /users/:userId - Updates information for a specific user based on their ID
 // Expects a JSON body with user information to be updated (username, email, firstName, lastName, isActive)
 // The user's ID is passed as a parameter in the URL
-router.put('/:userId', authenticateToken,userController.updateUser);
+router.put('/:userId', authenticateToken,authenticateUserId,userController.updateUser);
 
 // DELETE /users/:userId - Deletes a specific user based on their ID
 // The user's ID is passed as a parameter in the URL
-router.delete('/:userId', authenticateToken, userController.deleteUser);
+router.delete('/:userId', authenticateToken,authenticateUserId, userController.deleteUser);
 
 // POST /users/login - Logs in a user
 // Expects a JSON body with login credentials (username, password)
 router.post('/login', userController.login);
 
-router.use('/:userId/roles', authenticateToken, userRoleRoutes);
-router.use('/:userId/payment', authenticateToken, userPaymentInformationRoutes);
-router.use('/:userId/addresses', authenticateToken,userAddressRoutes);
-router.use('/:userId/wishlist', authenticateToken, userWishListRoutes);
+router.use('/:userId/roles', authenticateToken, authenticateUserId, userRoleRoutes);
+router.use('/:userId/payment', authenticateToken, authenticateUserId, userPaymentInformationRoutes);
+router.use('/:userId/addresses', authenticateToken,authenticateUserId, userAddressRoutes);
+router.use('/:userId/wishlist', authenticateToken,authenticateUserId, userWishListRoutes);
 
 module.exports = router;
