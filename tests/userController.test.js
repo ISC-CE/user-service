@@ -18,6 +18,13 @@ const createUserInDb = async (username, password, email, firstName, lastName) =>
     });
 };
 
+const loginAndGetToken = async (username, password) => {
+    const response = await request(app)
+        .post('/users/login')
+        .send({ username, password });
+    return response.body.token; // assuming the token is returned in response.body.token
+};
+
 describe('User Controller - Create User and Login User', () => {
     // Clear the database before each test
     beforeEach(async () => {
@@ -65,12 +72,6 @@ describe('User Controller - Create User and Login User', () => {
     });
 });
 
-const loginAndGetToken = async (username, password) => {
-    const response = await request(app)
-        .post('/users/login')
-        .send({ username, password });
-    return response.body.token; // assuming the token is returned in response.body.token
-};
 describe('User Controller - Get User, Update User and Delete User', () => {
     let token;
     let userId;
