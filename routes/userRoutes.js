@@ -8,8 +8,8 @@ const userPaymentInformationRoutes = require('./userPaymentInformationRoutes');
 const userAddressRoutes = require('./userAddressRoutes');
 const userWishListRoutes = require('./userWishListRoutes');
 
-const authenticateToken = require('../middleware/authenticateToken');
-const authenticateUserId = require('../middleware/authenticateUserId');
+const authenticateToken = require('../middlewares/authenticateToken');
+const authenticateUserId = require('../middlewares/authenticateUserId');
 
 // User Management Routes
 // These routes handle various user-related operations as described below
