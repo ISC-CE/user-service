@@ -19,6 +19,7 @@ User Service is a microservice that is part of an e-commerce project created dur
 - MySQL (via Sequelize ORM)
 - JSON Web Tokens (JWT)
 - Bcrypt.js
+- Docker
 
 ## Getting Started
 
@@ -27,6 +28,7 @@ User Service is a microservice that is part of an e-commerce project created dur
 - Node.js
 - npm
 - MySQL Database
+- Docker
 
 ### Installation
 
@@ -51,11 +53,15 @@ User Service is a microservice that is part of an e-commerce project created dur
    JWT_SECRET=your_jwt_secret
    ```
 5. Run the sql file from the sql folder to create a base database.
-6. Run the application in development mode:
+6. Start docker to setup the database:
+   ```bash
+   docker-compose up -d
+   ```
+7. Run the application in development mode:
    ```bash
    npm run dev
    ```
-7. Run the application in production mode:
+8. Run the application in production mode:
    ```bash
    npm start
    ```
